@@ -1,0 +1,15 @@
+#!/bin/sh
+if [ -z $1 ]; then
+        echo ""
+        echo " USO: $0 string "
+        exit 1
+fi
+
+/bin/echo -e "mailq |grep -v Arrival.Time|awk 'BEGIN { RS = \"\" } /$1/  {print \$1}'|\
+tr -d '*!'|postsuper -d -" > /tmp/rmqueue
+
+sh /tmp/rmqueue
+
+rm -f /tmp/rmqueue
+
+postfix reload
